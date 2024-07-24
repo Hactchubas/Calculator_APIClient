@@ -29,9 +29,6 @@ class OperationsAdapter (var operationsList: MutableList<RESTOperation>, var con
     override fun onBindViewHolder(holder: Operation, position: Int) {
         val currentItem = operationsList[position]
         holder.operation.text = currentItem.name
-//        holder.operation.setOnClickListener {
-//            TODO()
-//        }
     }
 
 }
