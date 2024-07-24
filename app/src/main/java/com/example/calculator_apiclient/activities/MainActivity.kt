@@ -1,11 +1,9 @@
 package com.example.calculator_apiclient.activities
 
-import android.R.attr.data
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -23,8 +21,8 @@ import com.example.calculator_apiclient.R
 import com.example.calculator_apiclient.adapter.OperationsAdapter
 import com.example.calculator_apiclient.classes.data.OperationsResponse
 import com.example.calculator_apiclient.classes.data.RESTOperation
-import com.example.calculator_apiclient.listener.OperationRecyclerViewListener
 import kotlinx.serialization.json.Json
+import com.example.calculator_apiclient.listener.OperationRecyclerViewListener
 
 
 class MainActivity : AppCompatActivity() {
@@ -89,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                             urlStr,
                             { response ->
                                 Log.v("Resultado", response.toString())
-                                val result = findViewById<TextView>(R.id.result)
+                                val result : TextView= findViewById<TextView?>(R.id.result)
                                 result.text = response.toString().split(":")[1].split("}")[0]
                             },
                             {
