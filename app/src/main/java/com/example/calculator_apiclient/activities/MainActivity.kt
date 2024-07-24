@@ -4,7 +4,10 @@ import android.R.attr.data
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,6 +23,7 @@ import com.example.calculator_apiclient.R
 import com.example.calculator_apiclient.adapter.OperationsAdapter
 import com.example.calculator_apiclient.classes.data.OperationsResponse
 import com.example.calculator_apiclient.classes.data.RESTOperation
+import com.example.calculator_apiclient.listener.OperationRecyclerViewListener
 import kotlinx.serialization.json.Json
 
 
@@ -62,7 +66,45 @@ class MainActivity : AppCompatActivity() {
         )
         queue?.add(stringRequest)
 
+        setupElementsEvents()
+    }
 
+    private fun setupElementsEvents() {
+        Log.v("Result", "Entrou")
+        // Evento de click
+        operationsListView.addOnItemTouchListener(
+            OperationRecyclerViewListener(
+                applicationContext,
+                operationsListView,
+                object : OperationRecyclerViewListener.OnItemClickListener {
+                    override fun onItemClick(view: View, position: Int) {
+                        val operation = operations[position]
+                        var parts = operation.path.split("/")
+                        val param1 = findViewById<TextView>(R.id.param1).text
+                        val param2 = findViewById<TextView>(R.id.param2).text
+                        val urlStr = "https://calculadora-fxpc.onrender.com/${parts[1]}/${parts[2]}/$param1/${param2}"
+
+                        val stringRequest = StringRequest(
+                            Request.Method.POST,
+                            urlStr,
+                            { response ->
+                                Log.v("Resultado", response.toString())
+                                val result = findViewById<TextView>(R.id.result)
+                                result.text = response.toString().split(":")[1].split("}")[0]
+                            },
+                            {
+                                Log.v("Resultado", it.message.toString())
+                            }
+                        )
+                        queue?.add(stringRequest)
+
+                    }
+                    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {}
+                    override fun onLongItemClick(view: View, position: Int) {}
+
+                }
+            )
+        )
     }
 
     fun operationsAdapterInit() {
